@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Journey Begins</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>The Blend Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="intro">
-    <img src="intro_image.png" id="intro-image" alt="Intro" />
-  </div>
-  <script src="script.js"></script>
+
+<div id="intro" onclick="startGame()" style="display: block;">
+  <img src="intro_image.jpg" alt="Intro Image">
+</div>
+
+<div id="scene" style="display: none;">
+  <div id="text-container"><p id="text"></p></div>
+  <div id="buttons"></div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
