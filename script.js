@@ -9,7 +9,7 @@ const scenes = [
   {
     id: 1,
     text: "You're not here to follow. You're here to notice. And to decide.",
-    choices: [{ text: "Continue", nextScene: 2 }]
+    choices: [{ text: "Continue", nextScene: 1 }]
   },
   {
     id: 2,
@@ -89,45 +89,58 @@ const scenes = [
 function startGame() {
   introEl.style.display = "none";
   sceneEl.style.display = "block";
-  showScene(sceneIndex);
+  showScene(0);
 }
 
-function typeText(texts, i = 0) {
-  if (i >= texts.length) return;
+function typeText(text, callback) {
   let idx = 0;
   textEl.innerHTML = "";
   buttonsEl.innerHTML = "";
+
   let interval = setInterval(() => {
-    if (idx < texts[i].length) {
-      textEl.innerHTML += texts[i].charAt(idx++);
+    if (idx < text.length) {
+      textEl.innerHTML += text.charAt(idx++);
     } else {
       clearInterval(interval);
-      setTimeout(() => typeText(texts, i + 1), 1000);
+      if (callback) callback();
     }
   }, 30);
 }
 
 function showScene(index) {
   sceneIndex = index;
-  let scene = scenes[index];
-  typeText(scene.text);
-  setTimeout(() => {
+  const scene = scenes[index];
+
+  typeText(scene.text, () => {
     buttonsEl.innerHTML = "";
-    scene.buttons.forEach(btn => {
+    scene.choices.forEach(choice => {
       let button = document.createElement("button");
-      button.innerText = btn.label;
+      button.innerText = choice.text;
       button.onclick = () => {
-        if (btn.choice) userChoices.push(btn.choice);
-        if (btn.next !== undefined) showScene(btn.next);
-        else if (btn.action) btn.action();
+        if (choice.text) userChoices.push(choice.text);
+        if (choice.nextScene !== undefined) {
+          showScene(choice.nextScene - 1);
+        } else if (choice.action) {
+          if (choice.action === "download") {
+            downloadSave();
+          } else if (choice.action === "end") {
+            alert("Thank you for playing! See you next time.");
+            location.reload();
+          }
+        }
       };
       buttonsEl.appendChild(button);
     });
-  }, scene.text.join(" ").length * 30 + 1000);
+  });
 }
 
 function downloadSave() {
-  const blob = new Blob([`Your path so far:\n` + userChoices.join("\n")], { type: "text/plain" });
+  const blob = new Blob(
+    [
+      `Your path so far:\n` + userChoices.join("\n")
+    ],
+    { type: "text/plain" }
+  );
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "blend_save.txt";
