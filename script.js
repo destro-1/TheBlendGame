@@ -9,7 +9,7 @@ const scenes = [
   {
     id: 1,
     text: "You're not here to follow. You're here to notice. And to decide.",
-    choices: [{ text: "Continue", nextScene: 1 }]
+    choices: [{ text: "Continue", nextScene: 2 }]
   },
   {
     id: 2,
